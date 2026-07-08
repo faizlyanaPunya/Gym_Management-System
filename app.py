@@ -1,7 +1,10 @@
-from flask import Flask, render_template, flash, redirect, url_for, request, session, logging
+# pyrefly: ignore [missing-import]
+from flask import Flask, render_template, flash, redirect, url_for, request, session
+# pyrefly: ignore [missing-import]
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators, RadioField, SelectField, IntegerField
 from wtforms.fields import DateField
+# pyrefly: ignore [missing-import]
 from passlib.hash import sha256_crypt
 from functools import wraps
 from datetime import datetime
@@ -11,7 +14,7 @@ app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'Gym'
+app.config['MYSQL_DB'] = 'gym'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
@@ -595,9 +598,12 @@ def memberDash(username):
 	poor = result.count(3)
 	average = result.count(2)
 	total = good + poor + average
-	good = round((good/total) * 100, 2)
-	average = round((average/total) * 100, 2)
-	poor = round((poor/total) * 100, 2)
+	if total > 0:
+		good = round((good/total) * 100, 2)
+		average = round((average/total) * 100, 2)
+		poor = round((poor/total) * 100, 2)
+	else:
+		good = average = poor = 0.0
 	cur.close()
 	return render_template('memberDash.html',user = username, plan = plan, scheme = scheme, progress = progress, good = good, poor = poor, average = average)
 
