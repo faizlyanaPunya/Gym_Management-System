@@ -22,7 +22,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat '"%PYTHON_HOME%\\Scripts\\pytest.exe"'
+                bat '"%PYTHON_HOME%\\Scripts\\pytest.exe" --junitxml=results.xml'
             }
         }
 
@@ -33,6 +33,13 @@ pipeline {
                     bat "docker build -t %DOCKER_IMAGE% -f Dockerfile ."
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            // Archive and display JUnit test reports inside Jenkins UI
+            junit 'results.xml'
         }
     }
 }
