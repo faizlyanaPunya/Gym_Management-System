@@ -80,7 +80,7 @@ def test_login_post_invalid_password(mock_mysql, client):
 # --- Add Trainer Unit Tests (TC_01, TC_02, TC_03) ---
 
 @patch('app.mysql')
-def test_add_trainer_success_tc01(mock_mysql, logged_in_admin):
+def test_valid_trainer_registration_tc01(mock_mysql, logged_in_admin):
     """TC_01: Verify successful trainer recruitment with valid data."""
     mock_cursor = MagicMock()
     mock_mysql.connection.cursor.return_value = mock_cursor
@@ -104,7 +104,7 @@ def test_add_trainer_success_tc01(mock_mysql, logged_in_admin):
     assert b"You recruited a new Trainor!!" in response.data
 
 @patch('app.mysql')
-def test_add_trainer_empty_username_tc02(mock_mysql, logged_in_admin):
+def test_empty_username_tc02(mock_mysql, logged_in_admin):
     """TC_02: Verify system displays validation message when username is empty."""
     mock_cursor = MagicMock()
     mock_mysql.connection.cursor.return_value = mock_cursor
@@ -127,7 +127,7 @@ def test_add_trainer_empty_username_tc02(mock_mysql, logged_in_admin):
     assert b"This field is required" in response.data or b"InputRequired" in response.data or b"addTrainor" in response.request.path
 
 @patch('app.mysql')
-def test_add_trainer_password_mismatch_tc03(mock_mysql, logged_in_admin):
+def test_mismatch_password_tc03(mock_mysql, logged_in_admin):
     """TC_03: Verify system displays validation message when passwords do not match."""
     mock_cursor = MagicMock()
     mock_mysql.connection.cursor.return_value = mock_cursor
