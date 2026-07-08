@@ -104,14 +104,18 @@ def setup_database():
 
     yield
 
-    # Clean up / Teardown test database
+    # Clean up / Teardown test database by dropping tables
     conn = MySQLdb.connect(
         host=my_app.app.config['MYSQL_HOST'],
         user=my_app.app.config['MYSQL_USER'],
-        passwd=my_app.app.config['MYSQL_PASSWORD']
+        passwd=my_app.app.config['MYSQL_PASSWORD'],
+        db=TEST_DB
     )
     cursor = conn.cursor()
-    cursor.execute(f"DROP DATABASE IF EXISTS {TEST_DB}")
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 0")
+    for table in ["progress", "members", "receps", "trainors", "info", "plans", "equip"]:
+        cursor.execute(f"DROP TABLE IF EXISTS {table}")
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
     conn.commit()
     cursor.close()
     conn.close()
