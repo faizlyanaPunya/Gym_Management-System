@@ -22,7 +22,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat '"%PYTHON_HOME%\\Scripts\\pytest.exe" --junitxml=results.xml'
+                bat '"%PYTHON_HOME%\\python.exe" optimize_tests.py'
             }
         }
 
