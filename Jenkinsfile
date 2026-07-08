@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'gym-management-system:latest'
+        PYTHON_HOME = 'C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python311'
     }
 
     stages {
@@ -14,13 +15,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'pip install -r requirements.txt'
+                bat '"%PYTHON_HOME%\\Scripts\\pip.exe" install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'pytest'
+                bat '"%PYTHON_HOME%\\Scripts\\pytest.exe"'
             }
         }
 
