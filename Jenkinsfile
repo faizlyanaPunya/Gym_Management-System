@@ -14,13 +14,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                bat 'pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'pytest'
+                bat 'pytest'
             }
         }
 
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     // Build the application image using the DockerFile
-                    sh 'docker build -t ${DOCKER_IMAGE} -f DockerFile .'
+                    bat "docker build -t %DOCKER_IMAGE% -f Dockerfile ."
                 }
             }
         }
