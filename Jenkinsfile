@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'gym-management-system:latest'
         PYTHON_HOME = 'C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python311'
+        PYTHONPATH = '.'
     }
 
     stages {
