@@ -130,24 +130,24 @@ def test_database_integration_flow(client):
     with my_app.app.app_context():
         cur = my_app.mysql.connection.cursor()
         
-        hashed_password = sha256_crypt.hash('admin_password')
+        hashed_password = sha256_crypt.hash('eswar@259522')
         cur.execute(
             "INSERT INTO info (username, password, name, prof, street, city, phone) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-            ('admin_user', hashed_password, 'Admin User', 1, 'Main St', 'CityName', '123456789')
+            ('eswar_123', hashed_password, 'Parameswar K', 1, 'Adarshnagar', 'Anantapur', '9666585361')
         )
         my_app.mysql.connection.commit()
 
         # Verify insertion
-        cur.execute("SELECT * FROM info WHERE username = %s", ['admin_user'])
+        cur.execute("SELECT * FROM info WHERE username = %s", ['eswar_123'])
         user = cur.fetchone()
         assert user is not None
-        assert user['name'] == 'Admin User'
+        assert user['name'] == 'Parameswar K'
         cur.close()
 
     # 2. Test log in flow using client and the real database record
     response = client.post('/login', data={
-        'username': 'admin_user',
-        'password': 'admin_password'
+        'username': 'eswar_123',
+        'password': 'eswar@259522'
     }, follow_redirects=True)
 
     assert response.status_code == 200
