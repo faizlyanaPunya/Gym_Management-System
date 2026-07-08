@@ -13,7 +13,7 @@ def setup_database():
     import MySQLdb
     
     # Safe close wrapper to prevent OperationalError (2006, '') on context teardown
-    original_connect = my_app.mysql.connect
+    original_connect = MySQLdb.connect
     def safe_connect(*args, **kwargs):
         conn = original_connect(*args, **kwargs)
         original_close = conn.close
@@ -24,7 +24,7 @@ def setup_database():
                 pass
         conn.close = safe_close
         return conn
-    my_app.mysql.connect = safe_connect
+    MySQLdb.connect = safe_connect
 
     # Connect without database specified to create the test database
     try:
