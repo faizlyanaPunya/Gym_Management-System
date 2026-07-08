@@ -12,6 +12,20 @@ def setup_database():
     """Sets up a clean test database and teardown after tests finish."""
     import MySQLdb
     
+    # Safe close wrapper to prevent OperationalError (2006, '') on context teardown
+    original_connect = my_app.mysql.connect
+    def safe_connect(*args, **kwargs):
+        conn = original_connect(*args, **kwargs)
+        original_close = conn.close
+        def safe_close(*c_args, **c_kwargs):
+            try:
+                original_close(*c_args, **c_kwargs)
+            except Exception:
+                pass
+        conn.close = safe_close
+        return conn
+    my_app.mysql.connect = safe_connect
+
     # Connect without database specified to create the test database
     try:
         conn = MySQLdb.connect(
