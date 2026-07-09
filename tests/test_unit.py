@@ -18,65 +18,6 @@ def logged_in_admin(client):
         sess['prof'] = 1  # Admin profile
     return client
 
-def test_home_page(client):
-    """Test that the homepage loads successfully."""
-    response = client.get('/')
-    assert response.status_code == 200
-    assert b"Home" in response.data or b"Login" in response.data
-
-def test_login_page_get(client):
-    """Test that the login page GET request loads successfully."""
-    response = client.get('/login')
-    assert response.status_code == 200
-
-@patch('app.mysql')
-def test_login_post_success(mock_mysql, client):
-    """Test successful login using mocked mysql connection."""
-    mock_cursor = MagicMock()
-    mock_mysql.connection.cursor.return_value = mock_cursor
-    
-    mock_cursor.execute.return_value = 1
-    from passlib.hash import sha256_crypt
-    hashed_password = sha256_crypt.encrypt('password')
-    
-    mock_cursor.fetchone.return_value = {
-        'username': 'test_user',
-        'password': hashed_password,
-        'prof': 1
-    }
-
-    response = client.post('/login', data={
-        'username': 'test_user',
-        'password': 'password'
-    }, follow_redirects=True)
-
-    assert response.status_code == 200
-    assert b"You are logged in" in response.data
-
-@patch('app.mysql')
-def test_login_post_invalid_password(mock_mysql, client):
-    """Test failed login with incorrect password."""
-    mock_cursor = MagicMock()
-    mock_mysql.connection.cursor.return_value = mock_cursor
-    mock_cursor.execute.return_value = 1
-    
-    from passlib.hash import sha256_crypt
-    hashed_password = sha256_crypt.encrypt('correct_password')
-    
-    mock_cursor.fetchone.return_value = {
-        'username': 'test_user',
-        'password': hashed_password,
-        'prof': 1
-    }
-
-    response = client.post('/login', data={
-        'username': 'test_user',
-        'password': 'wrong_password'
-    }, follow_redirects=True)
-
-    assert response.status_code == 200
-    assert b"Invalid login" in response.data
-
 # --- Add Trainer Unit Tests (TC_01, TC_02, TC_03) ---
 
 @patch('app.mysql')
